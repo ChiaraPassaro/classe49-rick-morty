@@ -1,11 +1,15 @@
+/* eslint-disable max-len */
+/* eslint-disable max-len */
 <template>
   <main>
-    <div class="container">
+    <div
+      class="container"
+    >
       <div class="row">
         <div class="col-12">
-          <div class="search">
-            Segnaposto
-          </div>
+          <Search
+            @doSearch="searchCharacters($event)"
+          />
         </div>
       </div>
       <div
@@ -13,13 +17,14 @@
         class="row cards"
       >
         <CardNew
-          v-for="(card, index) in characters"
+          v-for="(card, index) in filteredCharacters"
           :key="index+card.id"
           :image="card.image"
           :image-alt="card.name"
           :heading2="card.name"
           :heading3="card.origin.name"
           :heading4="card.species"
+          :class="getClass()"
         />
       </div>
       <!-- <div
@@ -88,6 +93,7 @@
 <script>
 import axios from 'axios';
 import CardNew from './CardNew.vue';
+import Search from './Search.vue';
 
 // result {
 //     "info": {
@@ -119,14 +125,26 @@ export default {
   name: 'Main',
   components: {
     CardNew,
+    Search,
   },
   data() {
     return {
+      textSearch: '',
       characters: null,
       cardsDeck: null,
       queryApiDeck: 'http://deckofcardsapi.com/api/deck/new/draw/?count=4',
       queryApi: 'https://rickandmortyapi.com/api/',
     };
+  },
+  computed: {
+    filteredCharacters() {
+      if (this.textSearch === '') {
+        return this.characters;
+      }
+
+      // eslint-disable-next-line max-len
+      return this.characters.filter((element) => element.name.toLowerCase().includes(this.textSearch.toLowerCase()));
+    },
   },
   created() {
     console.log('created');
@@ -165,6 +183,7 @@ export default {
           // console.log(data);
 
           this.characters = result.data.results;
+          this.filteredCharacters = result.data.results;
         })
         .catch((error) => {
           console.log(error);
@@ -179,6 +198,14 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    searchCharacters(text) {
+      console.log(text);
+      this.textSearch = text;
+    },
+    getClass() {
+      console.log('getClass');
+      return 'new-class';
     },
   },
 };
