@@ -85,47 +85,35 @@
       </div>
       <div v-else>
         <h1>Loading</h1>
+        <!-- <i class="fa-solid fa-circle-notch fa-spin" /> -->
+        <font-awesome-icon
+          icon="circle-notch"
+          spin
+        />
       </div>
     </div>
   </main>
 </template>
 
 <script>
+// https://www.npmjs.com/package/@fortawesome/vue-fontawesome
+// importiamo le svg e il componente vue fontawesome
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'; // icona da usare icona in camelCase
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 import axios from 'axios';
 import CardNew from './CardNew.vue';
 import Search from './Search.vue';
 
-// result {
-//     "info": {
-//     },
-//     "results": [
-//         {
-//             "id": 1,
-//             "name": "Rick Sanchez",
-//             "status": "Alive",
-//             "species": "Human",
-//             "type": "",
-//             "gender": "Male",
-//             "origin": {
-//                 "name": "Earth (C-137)",
-//                 "url": "https://rickandmortyapi.com/api/location/1"
-//             },
-//             "location": {
-//                 "name": "Citadel of Ricks",
-//                 "url": "https://rickandmortyapi.com/api/location/3"
-//             },
-//             "image": "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-//             "episode": [
-//             ],
-//             "url": "https://rickandmortyapi.com/api/character/1",
-//             "created": "2017-11-04T18:48:46.250Z"
-//         },
+library.add(faCircleNotch);
 
 export default {
   name: 'Main',
   components: {
     CardNew,
     Search,
+    FontAwesomeIcon, // inseriamo qui il componente
   },
   data() {
     return {
@@ -151,37 +139,15 @@ export default {
   },
   mounted() {
     console.log('mounted');
-    // simuliamo una chiamata con ritardo
-    // setTimeout(() => {
-    //   axios.get('https://rickandmortyapi.com/api/character/')
-    //     .then((result) => {
-    //       console.log(result.data.results);
-    //       this.cards = result.data.results;
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // }, 1000);
-    this.getCharacters();
+    setTimeout(() => {
+      this.getCharacters();
+    }, 10000);
     this.getCards();
   },
   methods: {
     getCharacters() {
       axios.get(`${this.queryApi}character/`)
         .then((result) => {
-        // console.log();
-        // const { results } = result.data;
-        // const data = results.map((element) => {
-        //   const {
-        //     name, image, origin, species,
-        //   } = element;
-        //   return {
-        //     name, image, origin, species,
-        //   };
-        // });
-
-          // console.log(data);
-
           this.characters = result.data.results;
           this.filteredCharacters = result.data.results;
         })
@@ -212,6 +178,10 @@ export default {
 </script>
 
 <style lang="scss">
+ @import '@fortawesome/fontawesome-free';
+ .fa-circle-notch {
+   font-size: 4em;
+ }
   .card {
     .divider-top::before {
       content: '';
